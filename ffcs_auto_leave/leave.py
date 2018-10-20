@@ -9,9 +9,9 @@ passwd = "your_password"
 next_sunday = '21-Oct-2018' ## TODO: function to find next saturday and sunday 
 place = 'put some lie here' ## TODO: Add a function to choose a random from a list of places 
 reason = 'some more lies plzz' ## TODO: Same function as in place 
-smobile = 'your_mobile_number'
-pmobile = 'parent\'s_mobile_number'
-facmobile = 'check_in_the_proctor_whatsapp_group'
+smobile = 'apna number daal de'
+pmobile = 'papa ka number daal de'
+facmobile = 'proctor ka bhi daal de'
 browser = webdriver.Chrome() ## or you can use firefox
 browser.get("https://academicscc.vit.ac.in/student/")
 browser.find_element_by_name("regno").send_keys(regno)
