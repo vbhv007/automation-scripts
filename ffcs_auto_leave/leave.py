@@ -8,7 +8,7 @@ import datetime
 import random
 
 def get_reason():
-	reasons = ['Shopping', 'Haicut', 'Food']
+	reasons = ['Shopping', 'Haircut', 'Food']
 	i = random.randrange(0, 3)
 	return reasons[i] 
 
@@ -22,11 +22,33 @@ def outing_date():
 	outing = (datetime.date.today() + timedelta(days=increment))
 	return outing.strftime('%d-%b-%Y')
 
+def apply_leave():
+	browser.get("https://academicscc.vit.ac.in/student/outing.asp")
+	WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
+	browser.find_element_by_xpath("//select[@name='apply']/option[@value='50174']").click()
+	time.sleep(1)
+	browser.find_element_by_id("demo32").send_keys(next_outing)
+	browser.find_element_by_xpath("//select[@name='sttime_hh']/option[@value='09']").click()
+	browser.find_element_by_xpath("//select[@name='sttime_mm']/option[@value='00']").click()
+	browser.find_element_by_xpath("//input[@name='frm_timetype' and @value='AM']").click()
+	browser.find_element_by_xpath("//select[@name='endtime_hh']/option[@value='06']").click()
+	browser.find_element_by_xpath("//select[@name='endtime_mm']/option[@value='00']").click()
+	browser.find_element_by_xpath("//input[@name='to_timetype' and @value='PM']").click()
+	browser.find_element_by_name("place").send_keys(place)
+	browser.find_element_by_name("reason").send_keys(reason)
+	browser.find_element_by_name("smobile").send_keys(smobile)
+	browser.find_element_by_name("pmobile").send_keys(pmobile)
+	browser.find_element_by_name("facmobile").send_keys(facmobile)
+	browser.find_element_by_name("requestcmd").click()
+	time.sleep(1) ## just a precaution
+
+def increase_date():
+	return (datetime.datetime.strptime(next_outing, "%d-%b-%Y") + timedelta(days=1)).strftime("%d-%b-%Y")
 
 if __name__ == '__main__':
 	regno = "your_reg_number"
 	passwd = "your_password"
-	next_sunday = outing_date()
+	next_outing = outing_date()
 	place = get_place()
 	reason = get_reason()
 	smobile = 'apna number daal de'
@@ -44,24 +66,9 @@ if __name__ == '__main__':
 
 	browser.find_element_by_class_name("submit3").click()
 	WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
-	browser.get("https://academicscc.vit.ac.in/student/outing.asp")
-	WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
-	browser.find_element_by_xpath("//select[@name='apply']/option[@value='50174']").click()
-	time.sleep(1)
-	browser.find_element_by_id("demo32").send_keys(next_sunday)
-	browser.find_element_by_xpath("//select[@name='sttime_hh']/option[@value='09']").click()
-	browser.find_element_by_xpath("//select[@name='sttime_mm']/option[@value='00']").click()
-	browser.find_element_by_xpath("//input[@name='frm_timetype' and @value='AM']").click()
-	browser.find_element_by_xpath("//select[@name='endtime_hh']/option[@value='06']").click()
-	browser.find_element_by_xpath("//select[@name='endtime_mm']/option[@value='00']").click()
-	browser.find_element_by_xpath("//input[@name='to_timetype' and @value='PM']").click()
-	browser.find_element_by_name("place").send_keys(place)
-	browser.find_element_by_name("reason").send_keys(reason)
-	browser.find_element_by_name("smobile").send_keys(smobile)
-	browser.find_element_by_name("pmobile").send_keys(pmobile)
-	browser.find_element_by_name("facmobile").send_keys(facmobile)
-	browser.find_element_by_name("requestcmd").click()
-	time.sleep(3) ## just a precaution
+	apply_leave()
+	next_outing = increase_date()
+	apply_leave()
 	print("Leave Applied")
 	browser.close()
 
