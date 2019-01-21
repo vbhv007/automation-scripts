@@ -1,0 +1,15 @@
+{
+  "name": "AutoCaptcha for VIT academics",
+  "short_name": "AutoCaptcha",
+  "version": "0.4.3",
+  "author": "",
+  "description": "Fills in the captcha for you at VIT's Academics page (http://academics.vit.ac.in and http://academicscc.vit.ac.in)",
+  "permissions": ["http://*/*","https://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://academics.vit.ac.in/parent/parent_login.asp","*://academics.vit.ac.in/student/stud_login.asp","*://academics.vit.ac.in/parent/","*://academics.vit.ac.in/student/","*://27.251.102.132/parent/parent_login.asp","*://27.251.102.132/student/stud_login.asp","*://27.251.102.132/parent/","*://27.251.102.132/student/","*://academicscc.vit.ac.in/student/","*://academicscc.vit.ac.in/student/stud_login.asp","*://academicscc.vit.ac.in/faculty/","*://academicscc.vit.ac.in/faculty/fac_login.asp","*://academicscc.vit.ac.in/parent/","*://academicscc.vit.ac.in/parent/parent_login.asp"],
+      "js": ["autoCaptcha.js"]
+    }
+  ],
+  "manifest_version": 2
+}

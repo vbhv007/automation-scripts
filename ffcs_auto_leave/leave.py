@@ -49,13 +49,13 @@ def apply_leave():
 
 if __name__ == '__main__':
 	# chrome options config
-	CHROME_PATH = '/usr/bin/google-chrome'
-	CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'
+	CHROME_PATH = './chrome/google-chrome'
+	CHROMEDRIVER_PATH = './chrome/chromedriver'
 	WINDOW_SIZE = "2048,1080"
 	chrome_options = Options()
 	chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 	chrome_options.binary_location = CHROME_PATH
-	chrome_options.add_argument('--load-extension=/home/vbhv/Downloads/VITacademics-Complete-Suite-master')
+	chrome_options.add_argument('--load-extension=./captcha-extension')
 
 	regno = "your_reg_number"
 	passwd = "your_password"
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 	smobile = 'apna number daal de'
 	pmobile = 'papa ka number daal de'
 	facmobile = 'proctor ka bhi daal de'
-	browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options) ## or you can use firefox
+	browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 	browser.get("https://academicscc.vit.ac.in/student/")
 	WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
 	time.sleep(1) # giving time to load auto captcha
