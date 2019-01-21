@@ -3,6 +3,8 @@
 from datetime import timedelta
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 import time
 import datetime
 import random
@@ -10,7 +12,7 @@ import random
 def get_reason():
 	reasons = ['Shopping', 'Haircut', 'Food']
 	i = random.randrange(0, 3)
-	return reasons[i] 
+	return reasons[i]
 
 def get_place():
 	places = ['Kellambakam', 'Vandaloor', 'Kandigai', 'Tambaram']
@@ -21,6 +23,9 @@ def outing_date():
 	increment = 5 - datetime.date.today().weekday()
 	outing = (datetime.date.today() + timedelta(days=increment))
 	return outing.strftime('%d-%b-%Y')
+
+def increase_date():
+	return (datetime.datetime.strptime(next_outing, "%d-%b-%Y") + timedelta(days=1)).strftime("%d-%b-%Y")
 
 def apply_leave():
 	browser.get("https://academicscc.vit.ac.in/student/outing.asp")
@@ -42,10 +47,16 @@ def apply_leave():
 	browser.find_element_by_name("requestcmd").click()
 	time.sleep(1) ## just a precaution
 
-def increase_date():
-	return (datetime.datetime.strptime(next_outing, "%d-%b-%Y") + timedelta(days=1)).strftime("%d-%b-%Y")
-
 if __name__ == '__main__':
+	# chrome options config
+	CHROME_PATH = '/usr/bin/google-chrome'
+	CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'
+	WINDOW_SIZE = "2048,1080"
+	chrome_options = Options()
+	chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+	chrome_options.binary_location = CHROME_PATH
+	chrome_options.add_argument('--load-extension=/home/vbhv/Downloads/VITacademics-Complete-Suite-master')
+
 	regno = "your_reg_number"
 	passwd = "your_password"
 	next_outing = outing_date()
@@ -54,21 +65,19 @@ if __name__ == '__main__':
 	smobile = 'apna number daal de'
 	pmobile = 'papa ka number daal de'
 	facmobile = 'proctor ka bhi daal de'
-	browser = webdriver.Chrome() ## or you can use firefox
+	browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options) ## or you can use firefox
 	browser.get("https://academicscc.vit.ac.in/student/")
+	WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
+	time.sleep(1) # giving time to load auto captcha
 	browser.find_element_by_name("regno").send_keys(regno)
 	browser.find_element_by_name("passwd").send_keys(passwd)
 
-	## TODO: Add auto captcha
-	while True:
-		if len(browser.find_element_by_name("vrfcd").get_attribute("value")) == 6:
-			break
-
-	browser.find_element_by_class_name("submit3").click()
-	WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
-	apply_leave()
-	next_outing = increase_date()
-	apply_leave()
-	print("Leave Applied")
+	if len(browser.find_element_by_name("vrfcd").get_attribute("value")) == 6:
+		browser.find_element_by_class_name("submit3").click()
+		WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
+		apply_leave()
+		next_outing = increase_date()
+		apply_leave()
+		browser.execute_script("window.scrollTo(0, 250);")
+	browser.save_screenshot('screenshot.png')
 	browser.close()
-
